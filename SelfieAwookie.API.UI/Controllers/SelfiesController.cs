@@ -66,7 +66,19 @@ namespace SelfieAwookie.API.UI.Controllers
             using var stream = new FileStream(filePath, FileMode.OpenOrCreate);
             await picture.CopyToAsync(stream);
 
-            return this.Ok();
+            var itemFile = _repository?.AddOnePicture(filePath);
+
+            try
+            {
+                _repository?.UnitOfWork.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+            return this.Ok(itemFile);
         }
 
         [HttpPost]
