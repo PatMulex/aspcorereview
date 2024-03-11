@@ -15,7 +15,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SelfieAWookies.Core.Selfies.Domain\SelfieAWookies.Core.Selfies.Domain.csproj" />
-    <ProjectReference Include="..\SelfieAWookies.Core.Selfies.Infrastructures\SelfieAWookies.Core.Selfies.Infrastructures.csproj" />
+	  <ProjectReference Include="..\SelfieAWookies.Core.Selfies.Infrastructures\SelfieAWookies.Core.Selfies.Infrastructures.csproj" />
+	  <ProjectReference Include="..\SelfieAWookies.Core.Selfies.Data.Migrations\SelfieAWookies.Core.Selfies.Data.Migrations.csproj" />
   </ItemGroup>
 
 </Project>
