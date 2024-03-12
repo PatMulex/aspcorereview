@@ -18,6 +18,7 @@ builder.Services.AddDbContext<SelfiesContext>(options =>
 });
 
 builder.Services.AddInjections();
+builder.Services.AddCustomSecurity(builder.Configuration);
 
 var app = builder.Build();
 
@@ -27,6 +28,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+app.UseCors(SecurityMethods.DEFAULT_POLICY_2);
 
 app.UseAuthorization();
 
