@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SelfieAwookie.API.UI.ExtensionsMethods;
 using SelfieAWookies.Core.Selfies.Domain;
@@ -16,6 +17,11 @@ builder.Services.AddDbContext<SelfiesContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("SelfiesDatabase"), sqlOptions => { });
 });
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+   // options.SignIn.RequireConfirmedEmail = true;
+}).AddEntityFrameworkStores<SelfiesContext>();
 
 builder.Services.AddInjections();
 builder.Services.AddCustomSecurity(builder.Configuration);
