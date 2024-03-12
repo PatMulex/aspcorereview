@@ -1,4 +1,7 @@
-﻿using System.Runtime.CompilerServices;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace SelfieAwookie.API.UI.ExtensionsMethods
 {
@@ -18,6 +21,34 @@ namespace SelfieAwookie.API.UI.ExtensionsMethods
         /// </summary>
         /// <param name="services"></param>
         public static void AddCustomSecurity(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddCustomCors(configuration);
+            services.AddCustomAuthentication(configuration);
+        }
+
+        public static void AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                string maClef = configuration["Jwt:Key"];
+                options.SaveToken = true;
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                {
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(maClef)),
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    ValidateActor = false,
+                    ValidateLifetime = true
+                };
+            });
+        }
+
+        public static void AddCustomCors(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddCors(options =>
             {
