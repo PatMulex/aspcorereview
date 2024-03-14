@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SelfieAwookie.API.UI.Applications.DTOs;
+using SelfieAWookies.Core.Selfies.Infrastructures.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -14,14 +16,16 @@ namespace SelfieAwookie.API.UI.Controllers
     public class AuthenticateController : ControllerBase
     {
         #region Fiels
+        private SecurityOption _option = null;
         private UserManager<IdentityUser> _userManager = null;
         private IConfiguration _configuration = null;
         #endregion
         #region COnstructors
-        public AuthenticateController(UserManager<IdentityUser> userManager, IConfiguration configuration)
+        public AuthenticateController(UserManager<IdentityUser> userManager, IConfiguration configuration, IOptions<SecurityOption> options)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _option = options.Value;
         }
         #endregion
         #region Public methods
@@ -74,7 +78,7 @@ namespace SelfieAwookie.API.UI.Controllers
             var jwtTokenHandler = new JwtSecurityTokenHandler();
 
             // We get our secret from the appsettings
-            var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
+            var key = Encoding.UTF8.GetBytes(_option.Key);
 
             // we define our token descriptor
             // We need to utilise claims which are properties in our token which gives information about the token
