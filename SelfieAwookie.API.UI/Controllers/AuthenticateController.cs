@@ -20,7 +20,7 @@ namespace SelfieAwookie.API.UI.Controllers
         private UserManager<IdentityUser> _userManager = null;
         private IConfiguration _configuration = null;
         #endregion
-        #region COnstructors
+        #region Constructors
         public AuthenticateController(UserManager<IdentityUser> userManager, IConfiguration configuration, IOptions<SecurityOption> options)
         {
             _userManager = userManager;
