@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SelfieAwookie.API.UI.Applications.Commands;
 using SelfieAwookie.API.UI.Applications.DTOs;
 using SelfieAwookie.API.UI.Applications.Queries;
 using SelfieAwookie.API.UI.ExtensionsMethods;
@@ -32,12 +33,7 @@ namespace SelfieAwookie.API.UI.Controllers
         }
         #endregion
         #region Public methods
-        //[HttpGet]
-        //public IEnumerable<Selfie> Get()
-        //{
-        //    return Enumerable.Range(1, 10).Select(i => new Selfie { Id = i });
-        //}
-
+        
         [HttpGet]
         //[DisableCors()]
         //[EnableCors(SecurityMethods.DEFAULT_POLICY_3)]
@@ -45,25 +41,12 @@ namespace SelfieAwookie.API.UI.Controllers
         {
             var param = this.Request.Query["wookieId"];
 
-            //var selfiesList = _repository.GetAll(wookieId);
-            //var model = selfiesList.Select(item => new SelfieResumeDto { Title = item.Title, WookieId = item.Wookie.Id, NbSelfiesFromWookie = (item.Wookie?.Selfies?.Count).GetValueOrDefault(0) }).ToList();
-
             var model = _mediator.Send(new SelectAllSefliesQuery() { WookieId = wookieId });
 
             return this.Ok(model);
         }
 
-        //[Route("photos")]
-        //[HttpPost]
-        //public async Task<IActionResult> AddPicture() 
-        //{
-        //    using var stream = new StreamReader(this.Request.Body);
-
-        //    var content = await stream.ReadToEndAsync();
-
-        //    return this.Ok();
-        //}
-
+       
         [Route("photos")]
         [HttpPost]
         public async Task<IActionResult> AddPicture(IFormFile picture)
@@ -96,22 +79,15 @@ namespace SelfieAwookie.API.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddOne(SelfieDto selfieDto)
+        public async Task<IActionResult> AddOne(SelfieDto selfieDto)
         {
             IActionResult result = this.BadRequest();
 
-            Selfie addSelfie = _repository.AddOne(new Selfie()
-            {
-                ImagePath = selfieDto.ImagePath,
-                Title = selfieDto.Title
-            });
+           var item = await  _mediator.Send(new AddSelfieCommand() { Item = selfieDto });
 
-            _repository.UnitOfWork.SaveChanges();
-
-            if (addSelfie != null)
+            if(item != null)
             {
-                selfieDto.Id = addSelfie.Id;
-                result = this.Ok(selfieDto);
+                result = this.Ok(item);
             }
 
             return result;
