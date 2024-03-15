@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SelfieAwookie.API.UI.ExtensionsMethods;
 using SelfieAWookies.Core.Selfies.Domain;
 using SelfieAWookies.Core.Selfies.Infrastructures.Data;
+using SelfieAWookies.Core.Selfies.Infrastructures.Loggers;
 using SelfieAWookies.Core.Selfies.Infrastructures.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 builder.Services.AddCustomOptions(builder.Configuration);
 builder.Services.AddInjections();
 builder.Services.AddCustomSecurity(builder.Configuration);
+
+builder.Logging.AddProvider(new SelfieAwookieLoggerProvider());
 
 var app = builder.Build();
 
