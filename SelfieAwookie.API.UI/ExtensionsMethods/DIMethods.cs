@@ -1,5 +1,7 @@
-﻿using SelfieAWookies.Core.Selfies.Domain;
+﻿using MediatR;
+using SelfieAWookies.Core.Selfies.Domain;
 using SelfieAWookies.Core.Selfies.Infrastructures.Repositories;
+using System.Reflection;
 
 namespace SelfieAwookie.API.UI.ExtensionsMethods
 {
@@ -10,9 +12,13 @@ namespace SelfieAwookie.API.UI.ExtensionsMethods
         /// Prepare customs dependencies injections
         /// </summary>
         /// <param name="services"></param>
-        public static void AddInjections(this IServiceCollection services)
+        public static IServiceCollection AddInjections(this IServiceCollection services)
         {
             services.AddScoped<ISelfieRepository, DefaultSelfieRepository>();
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+
+            return services;
         }
         #endregion
     }

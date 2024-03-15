@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SelfieAwookie.API.UI.Applications.DTOs;
+using SelfieAwookie.API.UI.Applications.Queries;
 using SelfieAwookie.API.UI.ExtensionsMethods;
 using SelfieAWookies.Core.Selfies.Domain;
 using SelfieAWookies.Core.Selfies.Infrastructures.Data;
@@ -12,19 +14,21 @@ namespace SelfieAwookie.API.UI.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [EnableCors(SecurityMethods.DEFAULT_POLICY)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+   // [EnableCors(SecurityMethods.DEFAULT_POLICY)]
     public class SelfiesController : ControllerBase
     {
         #region Fiels
         private readonly ISelfieRepository? _repository = null;
         private readonly IWebHostEnvironment _webHostEnvironment = null;
+        private readonly IMediator _mediator = null;
         #endregion
         #region Constructor
-        public SelfiesController(ISelfieRepository repository, IWebHostEnvironment webHostEnvironment)
+        public SelfiesController(ISelfieRepository repository, IWebHostEnvironment webHostEnvironment, IMediator mediator)
         {
             _repository = repository;
             _webHostEnvironment = webHostEnvironment;
+            _mediator = mediator;
         }
         #endregion
         #region Public methods
@@ -41,8 +45,10 @@ namespace SelfieAwookie.API.UI.Controllers
         {
             var param = this.Request.Query["wookieId"];
 
-            var selfiesList = _repository.GetAll(wookieId);
-            var model = selfiesList.Select(item => new SelfieResumeDto { Title = item.Title, WookieId = item.Wookie.Id, NbSelfiesFromWookie = (item.Wookie?.Selfies?.Count).GetValueOrDefault(0) }).ToList();
+            //var selfiesList = _repository.GetAll(wookieId);
+            //var model = selfiesList.Select(item => new SelfieResumeDto { Title = item.Title, WookieId = item.Wookie.Id, NbSelfiesFromWookie = (item.Wookie?.Selfies?.Count).GetValueOrDefault(0) }).ToList();
+
+            var model = _mediator.Send(new SelectAllSefliesQuery() { WookieId = wookieId });
 
             return this.Ok(model);
         }

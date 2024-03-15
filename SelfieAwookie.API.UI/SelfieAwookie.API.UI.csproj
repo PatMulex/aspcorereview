@@ -9,6 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.2.0" />
+    <PackageReference Include="MediatR.Extensions.Autofac.DependencyInjection" Version="12.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.3" />
@@ -20,6 +23,10 @@
     <ProjectReference Include="..\SelfieAWookies.Core.Selfies.Domain\SelfieAWookies.Core.Selfies.Domain.csproj" />
 	  <ProjectReference Include="..\SelfieAWookies.Core.Selfies.Infrastructures\SelfieAWookies.Core.Selfies.Infrastructures.csproj" />
 	  <ProjectReference Include="..\SelfieAWookies.Core.Selfies.Data.Migrations\SelfieAWookies.Core.Selfies.Data.Migrations.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Applications\Commands\" />
   </ItemGroup>
 
 </Project>

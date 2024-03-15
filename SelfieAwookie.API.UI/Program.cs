@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SelfieAwookie.API.UI.ExtensionsMethods;
+using SelfieAwookie.API.UI.Middlewares;
 using SelfieAWookies.Core.Selfies.Domain;
 using SelfieAWookies.Core.Selfies.Infrastructures.Data;
 using SelfieAWookies.Core.Selfies.Infrastructures.Loggers;
@@ -25,8 +26,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 }).AddEntityFrameworkStores<SelfiesContext>();
 
 builder.Services.AddCustomOptions(builder.Configuration);
-builder.Services.AddInjections();
-builder.Services.AddCustomSecurity(builder.Configuration);
+builder.Services.AddInjections()
+                .AddCustomSecurity(builder.Configuration);
 
 builder.Logging.AddProvider(new SelfieAwookieLoggerProvider());
 
@@ -37,6 +38,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+
+app.UseMiddleware<RegisterRequestMiddleware>();
 
 app.UseSwagger();
 app.UseSwaggerUI();
